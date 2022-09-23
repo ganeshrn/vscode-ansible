@@ -259,6 +259,60 @@
           "default": "python3",
           "description": "Path to the Python interpreter executable. Particularly important if you are using a Python virtual environment. Leave blank to use Python from PATH."
         },
+        "ansible.wisdom.enable": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Ansible wisdom to provide AI based code completion."
+        },
+        "ansible.wisdom.type": {
+          "scope": "resource",
+          "type": "boolean",
+          "default": "openai",
+          "choices": ["openai", "wisdom"],
+          "description": "Valid values are openai or wisdom"
+        },
+        "ansible.wisdom.apiKey": {
+          "scope": "resource",
+          "type": "string",
+          "description": "API key that will be used to create a session with wisdom service. Note: This is a temporary workaround and will be removed in future."
+        },
+        "ansible.wisdom.basePath": {
+          "scope": "resource",
+          "type": "string",
+          "description": "Base path for wisdom service endpoint",
+          "default": "https://api.openai.com/v1"
+        },
+        "ansible.wisdom.model": {
+          "scope": "resource",
+          "type": "string",
+          "description": "The model that is supported by the endpoint",
+          "default": "code-davinci-002"
+        },
+        "ansible.wisdom.temperature": {
+          "scope": "resource",
+          "type": "string",
+          "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.  We generally recommend altering this or `temperature` but not both.",
+          "default": 0
+        },
+        "ansible.wisdom.maxTokens": {
+          "scope": "resource",
+          "type": "integer",
+          "description": "The maximum number of `[tokens](/tokenizer) to generate in the completion.  The token count of your prompt plus `max_tokens` cannot exceed the model's context length. Most models have a context length of 2048 tokens (except for the newest models, which support 4096)",
+          "default": 128
+        },
+        "ansible.wisdom.topP": {
+          "scope": "resource",
+          "type": "integer",
+          "description": "How many completions to generate for each prompt.",
+          "default": 1
+        },
+        "ansible.wisdom.stop": {
+          "scope": "resource",
+          "type": "array",
+          "description": "Up to 4 sequences where the API will stop generating further tokens",
+          "default": null
+        },
         "ansibleServer.trace.server": {
           "type": "string",
           "enum": [
@@ -435,6 +489,7 @@
     "@ansible/ansible-language-server": "^0.10.1",
     "@types/ini": "^1.3.31",
     "ini": "^3.0.1",
+    "openai": "^3.0.0",
     "untildify": "^4.0.0",
     "vscode-languageclient": "^8.0.2"
   },
@@ -444,7 +499,7 @@
     "@types/glob": "^8.0.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.18",
-    "@types/vscode": "^1.63.0",
+    "@types/vscode": "^1.71.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
     "@vscode/test-electron": "^2.1.5",
@@ -473,7 +528,7 @@
     "//": "node version affects only development, it does not affect vscode runtime",
     "node": ">=16.0",
     "npm": "\n\nERROR: Please use yarn instead of npm for this repository.!!!\n\n",
-    "vscode": "^1.63.0",
+    "vscode": "^1.71.0",
     "yarn": ">=3.2.1"
   },
   "extensionDependencies": [
@@ -511,6 +566,7 @@
     "test-ui-oldest": "extest setup-and-run -e out/ext -c 1.63.0 --code_settings test/testFixtures/settings.json -s out/test-resources-oldest -u out/client/test/ui-test/allTestsSuite.js",
     "vscode-prepublish": "yarn run webpack",
     "watch": "tsc -b -w",
+    "package": "yarn run webpack && npx vsce package",
     "watch-server": "tsc -p ../ansible-language-server --outDir out/server -w",
     "webpack": "yarn run clean && yarn run compile && webpack --mode production --config ./webpack.config.js",
     "webpack-dev": "yarn run clean && webpack --mode development --config ./webpack.config.js",
@@ -521,7 +577,7 @@
     "test-e2e": "yarn run test-compile && node ./out/client/test/testRunner",
     "test-e2e-withserver": "yarn run test-compile-withserver && node ./out/client/test/testRunner"
   },
-  "version": "0.13.0",
+  "version": "0.20.0",
   "packageManager": "yarn@3.2.1",
   "vsce": {
     "dependencies": false,

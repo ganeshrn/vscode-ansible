@@ -1,5 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 /* "stdlib" */
+import * as vscode from "vscode";
 import * as path from "path";
 import {
   commands,
@@ -31,13 +32,15 @@ import {
 } from "./extensionConflicts";
 import { formatAnsibleMetaData } from "./features/utils/formatAnsibleMetaData";
 import { languageAssociation } from "./features/fileAssociation";
+import { SettingsManager } from "./settings";
+import { WisdomManager } from "./features/wisdom"
 
 let client: LanguageClient;
 let isActiveClient = false;
 let cachedAnsibleVersion: string;
 
-// status bar item
-let myStatusBarItem: StatusBarItem;
+// ansible metadata bar item
+let metadataStatusBar: StatusBarItem;
 
 export function activate(context: ExtensionContext): void {
   new AnsiblePlaybookRunProvider(context);
@@ -56,12 +59,15 @@ export function activate(context: ExtensionContext): void {
     )
   );
 
-  // create a new status bar item that we can manage
-  myStatusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
-  context.subscriptions.push(myStatusBarItem);
+  const extSettings = new SettingsManager();
+  extSettings.initialize();
 
-  myStatusBarItem.text = cachedAnsibleVersion;
-  myStatusBarItem.show();
+  // create a new ansible metadata status bar item that we can manage
+  metadataStatusBar = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+  context.subscriptions.push(metadataStatusBar);
+
+  metadataStatusBar.text = cachedAnsibleVersion;
+  metadataStatusBar.show();
 
   const serverModule = context.asAbsolutePath(
     path.join("out", "server", "src", "server.js")
@@ -99,6 +105,23 @@ export function activate(context: ExtensionContext): void {
   // Update ansible meta data in the statusbar tooltip (client-server)
   window.onDidChangeActiveTextEditor(updateAnsibleInfo);
   workspace.onDidOpenTextDocument(updateAnsibleInfo);
+  workspace.onDidChangeConfiguration(() => extSettings.initialize());
+
+  const disposable = vscode.commands.registerCommand(
+    "extension.inline-completion-settings",
+    () => {
+      vscode.window.showInformationMessage("Show settings");
+    }
+  );
+
+  context.subscriptions.push(disposable);
+  
+  let wisdomMgr = new WisdomManager(context, extSettings.settings)
+
+  vscode.languages.registerInlineCompletionItemProvider(
+    { pattern: "**" },
+    wisdomMgr.getProvider()
+  );
 }
 
 const startClient = async () => {
@@ -160,16 +183,16 @@ function resyncAnsibleInventory(): void {
  */
 function updateAnsibleInfo(): void {
   if (window.activeTextEditor?.document.languageId !== "ansible") {
-    myStatusBarItem.hide();
+    metadataStatusBar.hide();
     return;
   }
 
   if (isActiveClient) {
-    myStatusBarItem.tooltip = new MarkdownString(
+    metadataStatusBar.tooltip = new MarkdownString(
       ` $(sync~spin) Fetching... `,
       true
     );
-    myStatusBarItem.show();
+    metadataStatusBar.show();
     client.onNotification(
       new NotificationType(`update/ansible-metadata`),
       (ansibleMetaDataList: any) => {
@@ -179,28 +202,28 @@ function updateAnsibleInfo(): void {
           cachedAnsibleVersion =
             ansibleMetaData.metaData["ansible information"]["ansible version"];
           const tooltip = ansibleMetaData.markdown;
-          myStatusBarItem.text = ansibleMetaData.eeEnabled
+          metadataStatusBar.text = ansibleMetaData.eeEnabled
             ? `$(bracket-dot) [EE] ${cachedAnsibleVersion}`
             : `$(bracket-dot) ${cachedAnsibleVersion}`;
-          myStatusBarItem.backgroundColor = "";
-          myStatusBarItem.tooltip = tooltip;
+          metadataStatusBar.backgroundColor = "";
+          metadataStatusBar.tooltip = tooltip;
 
           if (!ansibleMetaData.ansibleLintPresent) {
-            myStatusBarItem.text = `$(warning) ${cachedAnsibleVersion}`;
-            myStatusBarItem.backgroundColor = new ThemeColor(
+            metadataStatusBar.text = `$(warning) ${cachedAnsibleVersion}`;
+            metadataStatusBar.backgroundColor = new ThemeColor(
               "statusBarItem.warningBackground"
             );
           }
 
-          myStatusBarItem.show();
+          metadataStatusBar.show();
         } else {
           console.log("ansible not found");
-          myStatusBarItem.text = "$(error) Ansible Info";
-          myStatusBarItem.tooltip = ansibleMetaData.markdown;
-          myStatusBarItem.backgroundColor = new ThemeColor(
+          metadataStatusBar.text = "$(error) Ansible Info";
+          metadataStatusBar.tooltip = ansibleMetaData.markdown;
+          metadataStatusBar.backgroundColor = new ThemeColor(
             "statusBarItem.errorBackground"
           );
-          myStatusBarItem.show();
+          metadataStatusBar.show();
         }
       }
     );

@@ -40,6 +40,7 @@ modelines
 myuser
 noheading
 npmrc
+opnai
 overridable
 ovsx
 piptools
