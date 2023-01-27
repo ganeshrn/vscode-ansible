@@ -144,6 +144,20 @@
         "category": "%commands.category.ansible-vault%",
         "command": "extension.ansible.vault",
         "title": "%commands.title.ansible-vault%"
+      },
+      {
+        "command": "ansible.wisdom.inlineSuggest.accept",
+        "title": "Ansible wisdom inline suggestion accept"
+      },
+      {
+        "command": "ansible.wisdom.inlineSuggest.hide",
+        "title": "Ansible wisdom inline suggestion hide",
+        "when": "editorLangId == 'ansible'"
+      },
+      {
+        "command": "ansible.wisdom.inlineSuggest.trigger",
+        "title": "Ansible wisdom inline suggestion trigger",
+        "when": "editorLangId == 'ansible'"
       }
     ],
     "configuration": {
@@ -381,16 +395,22 @@
       {
         "key": "tab",
         "command": "ansible.wisdom.inlineSuggest.accept",
-        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && inlineSuggestionVisible && !editorTabMovesFocus"
+        "extensionName": "Ansible",
+        "source": "extension",
+        "when": "inlineSuggestionVisible"
       },
       {
         "key": "escape",
         "command": "ansible.wisdom.inlineSuggest.hide",
+        "extensionName": "Ansible",
+        "source": "extension",
         "when": "inlineSuggestionVisible"
       },
       {
         "key": "ctrl+.",
         "command": "ansible.wisdom.inlineSuggest.trigger",
+        "extensionName": "Ansible",
+        "source": "extension",
         "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && !inlineSuggestionVisible && !editorTabMovesFocus"
       },
       {
@@ -641,7 +661,7 @@
     "test-e2e": "yarn run test-compile && node ./out/client/test/testRunner",
     "test-e2e-withserver": "yarn run test-compile-withserver && node ./out/client/test/testRunner"
   },
-  "version": "2023.1.26",
+  "version": "2023.1.27",
   "packageManager": "yarn@3.3.0",
   "vsce": {
     "dependencies": false,
