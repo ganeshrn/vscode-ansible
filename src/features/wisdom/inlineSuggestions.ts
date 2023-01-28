@@ -119,6 +119,10 @@ async function getInlineSuggestion(
   const inputData: RequestParams = {
     context: context,
     prompt: prompt,
+    userId: await (
+      await wisdomManager.telemetry.redhatService.getIdManager()
+    ).getRedHatUUID(),
+    suggestionId: suggestionId,
   };
   console.log(
     `${getCurrentUTCDateTime()}: request data to wisdom service:\n${JSON.stringify(
