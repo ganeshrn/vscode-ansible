@@ -66,3 +66,6 @@ class ExampleInventory(object):
 
 # Get the inventory.
 ExampleInventory()
+
+
+
