@@ -151,13 +151,15 @@
       },
       {
         "command": "ansible.wisdom.inlineSuggest.hide",
-        "title": "Ansible wisdom inline suggestion hide",
-        "when": "editorLangId == 'ansible'"
+        "title": "Ansible wisdom inline suggestion hide"
       },
       {
         "command": "ansible.wisdom.inlineSuggest.trigger",
-        "title": "Ansible wisdom inline suggestion trigger",
-        "when": "editorLangId == 'ansible'"
+        "title": "Ansible wisdom inline suggestion trigger"
+      },
+      {
+        "command": "ansible.wisdom.inlineSuggest.triggerOnEnter",
+        "title": "Ansible wisdom inline suggestion trigger on enter"
       }
     ],
     "configuration": {
@@ -373,7 +375,7 @@
         "ansible.wisdom.suggestions.userFeedback": {
           "scope": "resource",
           "type": "boolean",
-          "default": true,
+          "default": false,
           "markdownDescription": "Get user feedback for Ansible wisdom inline suggestions.",
           "order": 25
         }
@@ -397,25 +399,27 @@
         "command": "ansible.wisdom.inlineSuggest.accept",
         "extensionName": "Ansible",
         "source": "extension",
-        "when": "inlineSuggestionVisible"
+        "when": "inlineSuggestionVisible && editorLangId == 'ansible'"
       },
       {
         "key": "escape",
         "command": "ansible.wisdom.inlineSuggest.hide",
         "extensionName": "Ansible",
         "source": "extension",
-        "when": "inlineSuggestionVisible"
+        "when": "inlineSuggestionVisible && editorLangId == 'ansible'"
       },
       {
         "key": "ctrl+.",
         "command": "ansible.wisdom.inlineSuggest.trigger",
         "extensionName": "Ansible",
         "source": "extension",
-        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && !inlineSuggestionVisible && !editorTabMovesFocus"
+        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && !inlineSuggestionVisible && !editorTabMovesFocus && editorLangId == 'ansible'"
       },
       {
-        "command": "extension.onEnter",
-        "key": "Enter"
+        "key": "Enter",
+        "command": "ansible.wisdom.inlineSuggest.triggerOnEnter",
+        "title": "Ansible wisdom inline suggestion trigger on enter",
+        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && editorLangId == 'ansible'"
       }
     ],
     "languages": [
@@ -661,7 +665,7 @@
     "test-e2e": "yarn run test-compile && node ./out/client/test/testRunner",
     "test-e2e-withserver": "yarn run test-compile-withserver && node ./out/client/test/testRunner"
   },
-  "version": "2023.1.27",
+  "version": "2023.2.2",
   "packageManager": "yarn@3.3.0",
   "vsce": {
     "dependencies": false,
