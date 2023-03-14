@@ -44,6 +44,29 @@
     }
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ansible-wisdom-explorer",
+          "title": "Ansible",
+          "icon": "images/ansible.svg"
+        }
+      ]
+    },
+    "views": {
+      "ansible-wisdom-explorer": [
+        {
+          "id": "wisdom-explorer-treeview",
+          "name": "Wisdom Service"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "wisdom-explorer-treeview",
+        "contents": "Welcome to wisdom service for Visual Studio Code.\nExperience smarter automation with Wisdom's AI-assisted solutions for your playbook. [Learn more](https://www.redhat.com/en/engage/project-wisdom)\nLet's simplify your workflow by connecting VS Code with Wisdom.\n[Connect](command:ansible.wisdom.oauth)"
+      }
+    ],
     "jsonValidation": [
       {
         "fileMatch": [
@@ -160,6 +183,10 @@
       {
         "command": "ansible.wisdom.inlineSuggest.triggerOnEnter",
         "title": "Ansible wisdom inline suggestion trigger on enter"
+      },
+      {
+        "command": "extension.wisdom.getNewToken",
+        "title": "Wisdom Get New Token"
       }
     ],
     "configuration": {
@@ -349,7 +376,7 @@
         "ansible.wisdom.enabled": {
           "scope": "resource",
           "type": "boolean",
-          "default": true,
+          "default": false,
           "markdownDescription": "Enable Ansible wisdom service to provide intelligent code suggestions.",
           "order": 21
         },
@@ -359,25 +386,12 @@
           "markdownDescription": "Base path for wisdom service endpoints",
           "order": 22
         },
-        "ansible.wisdom.authToken": {
-          "scope": "resource",
-          "type": "string",
-          "markdownDescription": "User Authentication token to access Ansible wisdom service",
-          "order": 23
-        },
         "ansible.wisdom.suggestions.enabled": {
           "scope": "resource",
           "type": "boolean",
-          "default": true,
-          "markdownDescription": "Enable Ansible wisdom inline suggestions.",
-          "order": 24
-        },
-        "ansible.wisdom.suggestions.userFeedback": {
-          "scope": "resource",
-          "type": "boolean",
           "default": false,
-          "markdownDescription": "Get user feedback for Ansible wisdom inline suggestions.",
-          "order": 25
+          "markdownDescription": "Enable Ansible wisdom inline suggestions.",
+          "order": 23
         }
       }
     },
@@ -413,12 +427,13 @@
         "command": "ansible.wisdom.inlineSuggest.trigger",
         "extensionName": "Ansible",
         "source": "extension",
-        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && !inlineSuggestionVisible && !editorTabMovesFocus && editorLangId == 'ansible'"
+        "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && editorTextFocus && !editorHasSelection && !inlineSuggestionVisible && editorLangId == 'ansible'"
       },
       {
         "key": "Enter",
         "command": "ansible.wisdom.inlineSuggest.triggerOnEnter",
-        "title": "Ansible wisdom inline suggestion trigger on enter",
+        "extensionName": "Ansible",
+        "source": "extension",
         "when": "config.ansible.wisdom.enabled && config.ansible.wisdom.suggestions.enabled && editorLangId == 'ansible'"
       }
     ],
@@ -576,6 +591,7 @@
     "@types/ini": "^1.3.31",
     "axios": "^1.2.1",
     "ini": "^3.0.1",
+    "net": "^1.0.2",
     "untildify": "^4.0.0",
     "uuid": "^8.3.2",
     "vscode-languageclient": "^8.0.2"
@@ -592,6 +608,7 @@
     "@typescript-eslint/parser": "^5.47.1",
     "@vscode/test-electron": "^2.2.1",
     "@vscode/vsce": "^2.16.0",
+    "axios": "^1.2.5",
     "chai": "^4.3.7",
     "copyfiles": "^2.4.1",
     "depcheck": "^1.4.3",
@@ -666,7 +683,7 @@
     "test-e2e-withserver": "yarn run test-compile-withserver && node ./out/client/test/testRunner"
   },
   "version": "2023.2.2",
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.4.1",
   "vsce": {
     "dependencies": false,
     "yarn": false
