@@ -694,12 +694,10 @@
     "test-e2e": "yarn run test-compile && node ./out/client/test/testRunner",
     "test-e2e-withserver": "yarn run test-compile-withserver && node ./out/client/test/testRunner"
   },
-  "version": "2023.3.24",
+  "version": "2023.3.29",
   "packageManager": "yarn@3.5.0",
   "vsce": {
     "dependencies": false,
     "yarn": false
-  },
-  "segmentWriteKey": "DxnFa87EXSrfwoSuQBZAe2EMkb7nz5GR",
-  "segmentWriteKeyDebug": "5r1FsJAkhB1ZWnxxaMRPDav5RdVnyMLr"
+  }
 }
