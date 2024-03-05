@@ -9,6 +9,8 @@ export namespace AnsibleCommands {
   export const ANSIBLE_NAVIGATOR_RUN = "extension.ansible-navigator.run";
   export const ANSIBLE_PYTHON_SET_INTERPRETER =
     "ansible.python.set.interpreter";
+  export const ANSIBLE_POLICY_CHECK_PRERUN = "ansible.policy.prerun";
+  export const ANSIBLE_POLICY_CHECK_POSTRUN = "ansible.policy.postrun";
 }
 
 export const AnsibleFileTypes: IAnsibleFileTypes = {

@@ -271,6 +271,14 @@
       {
         "command": "ansible.lightspeed.enableExperimentalFeatures",
         "title": "Ansible Lightspeed: Enable experimental features"
+      },
+      {
+        "command": "ansible.policy.prerun",
+        "title": "Pre-run"
+      },
+      {
+        "command": "ansible.policy.postrun",
+        "title": "Post-run"
       }
     ],
     "configuration": [
@@ -379,6 +387,27 @@
             "default": "",
             "markdownDescription": "Command line arguments to be passed to ansible-lint.",
             "order": 3
+          },
+          "ansible.validation.gatekeeper.enabled": {
+            "scope": "resource",
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "Enables Ansible policy check using `ansible-gatekeeper`. Requires `#ansible.validation.enabled#` to be enabled.",
+            "order": 4
+          },
+          "ansible.validation.gatekeeper.path": {
+            "scope": "machine-overridable",
+            "type": "string",
+            "default": "ansible-gatekeeper",
+            "markdownDescription": "Path to the ansible-gatekeeper executable.",
+            "order": 5
+          },
+          "ansible.validation.gatekeeper.arguments": {
+            "scope": "resource",
+            "type": "string",
+            "default": "",
+            "markdownDescription": "Command line arguments to be passed to ansible-gatekeeper.",
+            "order": 6
           }
         }
       },
@@ -609,6 +638,16 @@
           "command": "extension.ansible-playbook.run"
         }
       ],
+      "ansible.policy.check": [
+        {
+          "command": "ansible.policy.prerun",
+          "group": "Policy"
+        },
+        {
+          "command": "ansible.policy.postrun",
+          "group": "Policy"
+        }
+      ],
       "editor/context": [
         {
           "group": "2_main@1",
@@ -619,12 +658,22 @@
           "group": "2_main@1",
           "command": "ansible.lightspeed.playbookExplanation",
           "when": "editorTextFocus && redhat.ansible.lightspeedExperimentalEnabled && editorLangId == ansible"
+        },
+        {
+          "group": "2_main@2",
+          "submenu": "ansible.policy.check",
+          "when": "isFileSystemResource && editorLangId == ansible"
         }
       ],
       "explorer/context": [
         {
           "group": "2_main@1",
           "submenu": "ansible.playbook.run",
+          "when": "isFileSystemResource && resourceLangId == ansible"
+        },
+        {
+          "group": "2_main@2",
+          "submenu": "ansible.policy.check",
           "when": "isFileSystemResource && resourceLangId == ansible"
         }
       ]
@@ -633,6 +682,10 @@
       {
         "id": "ansible.playbook.run",
         "label": "%submenus.ansible.run-via%"
+      },
+      {
+        "id": "ansible.policy.check",
+        "label": "Run Ansible policy checks"
       }
     ],
     "grammars": [
@@ -745,6 +798,7 @@
     "ini": "^4.1.2",
     "marked": "^12.0.1",
     "minimatch": "^9.0.4",
+    "diff": "^5.2.0",
     "start-server-and-test": "^2.0.3",
     "uuid": "^9.0.1",
     "vscode-languageclient": "^9.0.1",
@@ -754,6 +808,7 @@
   "description": "Ansible language support",
   "devDependencies": {
     "@types/chai": "^4.3.14",
+    "@types/diff": "^5",
     "@types/express": "^4.17.21",
     "@types/glob": "^8.1.0",
     "@types/lodash": "^4.17.0",
@@ -844,7 +899,7 @@
     "watch-server": "tsc -p ../ansible-language-server --outDir out/server -w",
     "webpack": "yarn run clean && yarn run compile && webpack --mode production --config ./webpack.config.ts",
     "webpack-dev": "yarn run clean && webpack --mode development --config ./webpack.config.ts",
-    "webpack:watch": "webpack --mode development --config ./webpack.config.ts --watch",
+    "watch-webpack": "webpack --mode development --config ./webpack.config.ts --watch",
     "clean": "rimraf out/client out/server out/tsconfig.tsbuildinfo coverage .nyc_output",
     "test-compile": "yarn run clean && yarn run compile && tsc -p ./",
     "test-compile-withserver": "yarn run clean && yarn run compile-withserver && tsc -p ./",

@@ -70,6 +70,7 @@ import { withInterpreter } from "./features/utils/commandRunner";
 import { IFileSystemWatchers } from "./interfaces/watchers";
 import { LightspeedAuthSession } from "./interfaces/lightspeed";
 import { showPlaybookGenerationPage } from "./features/lightspeed/playbookGeneration";
+import { PolicyCheckProvider } from "./features/policyScan/scan";
 
 export let client: LanguageClient;
 export let lightSpeedManager: LightSpeedManager;
@@ -131,7 +132,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const extSettings = new SettingsManager();
   await extSettings.initialize();
 
+  // register playbook run provider
   new AnsiblePlaybookRunProvider(context, extSettings.settings, telemetry);
+
+  // register policy check provider
+  new PolicyCheckProvider(context, client, extSettings, telemetry);
 
   // handle metadata status bar
   const metaData = new MetadataManager(context, client, telemetry, extSettings);
