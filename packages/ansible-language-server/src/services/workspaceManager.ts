@@ -9,6 +9,7 @@ import {
 import { AnsibleConfig } from "./ansibleConfig";
 import { AnsibleLint } from "./ansibleLint";
 import { AnsiblePlaybook } from "./ansiblePlaybook";
+import { AnsiblePolicyEngine } from "./ansiblePolicyEngine";
 import { DocsLibrary } from "./docsLibrary";
 import { ExecutionEnvironment } from "./executionEnvironment";
 import { MetadataLibrary } from "./metadataLibrary";
@@ -137,6 +138,7 @@ export class WorkspaceFolderContext {
   private _ansibleInventory: Thenable<AnsibleInventory> | undefined;
   private _ansibleLint: AnsibleLint | undefined;
   private _ansiblePlaybook: AnsiblePlaybook | undefined;
+  private _ansiblePolicyEngine: AnsiblePolicyEngine | undefined;
 
   constructor(
     connection: Connection,
@@ -223,6 +225,13 @@ export class WorkspaceFolderContext {
       this._ansiblePlaybook = new AnsiblePlaybook(this.connection, this);
     }
     return this._ansiblePlaybook;
+  }
+
+  public get ansiblePolicyEngine(): AnsiblePolicyEngine {
+    if (!this._ansiblePolicyEngine) {
+      this._ansiblePolicyEngine = new AnsiblePolicyEngine(this.connection, this);
+    }
+    return this._ansiblePolicyEngine;
   }
 
   public get executionEnvironment(): Thenable<ExecutionEnvironment> {

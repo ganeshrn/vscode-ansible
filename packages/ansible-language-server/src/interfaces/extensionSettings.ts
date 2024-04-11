@@ -30,6 +30,8 @@ export interface ExtensionSettings {
   validation: {
     enabled: boolean;
     lint: { enabled: boolean; path: string; arguments: string };
+    policyCheck: { enabled: boolean };
+    policyEngine: { path: string; arguments: string };
   };
   executionEnvironment: {
     enabled: boolean;
@@ -125,6 +127,22 @@ interface ValidationSettingsWithDescription {
       default: boolean;
       description: string;
     };
+    path: {
+      default: string;
+      description: string;
+    };
+    arguments: {
+      default: string;
+      description: string;
+    };
+  };
+  policyCheck: {
+    enabled: {
+      default: boolean;
+      description: string;
+    };
+  };
+  policyEngine: {
     path: {
       default: string;
       description: string;

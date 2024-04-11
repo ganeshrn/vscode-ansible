@@ -38,7 +38,7 @@ export class SettingsManager {
       activationScript: {
         default: "",
         description:
-          "Path to a custom activation script, which is to be used instead of the settings above to run in a python virtual environment",
+          "Path to a custom activation script, which is to be used instead of te settings above to run in a python virtual environment",
       },
     },
     executionEnvironment: {
@@ -122,6 +122,23 @@ export class SettingsManager {
           default: "",
           description:
             "Optional command line arguments to be appended to ansible-lint invocation",
+        },
+      },
+      policyCheck: {
+        enabled: {
+          default: true,
+          description: "Toggle Ansible Policy validation support",
+        },
+      },
+      policyEngine: {
+        path: {
+          default: "ansible-gatekeeper",
+          description: "Path to the Ansible policy engine executable",
+        },
+        arguments: {
+          default: "",
+          description:
+            "Optional command line arguments to be appended to Ansible policy engine invocation",
         },
       },
     },
@@ -220,8 +237,8 @@ export class SettingsManager {
   /**
    * A recursive function to restructure the raw settings object similar to ExtensionSettings interface in order
    * to make it work with the code
-   * @param settingsObject - settings object with `default` and `description` as keys
-   * @returns settings - object with a structure similar to ExtensionSettings interface
+   * @param settingsObject settings object with `default` and `description` as keys
+   * @returns settings object with a structure similar to ExtensionSettings interface
    */
   private _settingsAdjustment(settingsObject) {
     for (const key in settingsObject) {

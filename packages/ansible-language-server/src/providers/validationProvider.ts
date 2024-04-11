@@ -80,6 +80,37 @@ export async function doValidate(
       }
     }
 
+    // Ansible policy validation
+    if (settings.validation.policyCheck.enabled) {
+      const commandRunner = new CommandRunner(connection, context, settings);
+
+      let policyExecutablePath = "ansible-gatekeeper";
+      if (
+        !settings.executionEnvironment.enabled &&
+        settings.validation.policyEngine.path &&
+        settings.validation.policyEngine.path !== ""
+      ) {
+        policyExecutablePath = settings.validation.policyEngine.path;
+      }
+      connection?.console.log(
+        `Path for policy engine: ${policyExecutablePath}`,
+      );
+      const policyAvailability =
+        await commandRunner.getExecutablePath(policyExecutablePath);
+      connection?.console.log(
+        `Complete path for policy validation: ${policyAvailability}`,
+      );
+
+      if (policyAvailability) {
+        connection?.console.log("Validating using Ansible policy rule engine");
+        diagnosticsByFile =
+          await context.ansiblePolicyEngine.doValidate(textDocument);
+      } else {
+        connection?.window.showErrorMessage(
+          "Ansible policy engine is not available. Kindly check the path or disable policy validation using Ansible policy engine",
+        );
+      }
+    }
     if (!diagnosticsByFile.has(textDocument.uri)) {
       // In case there are no diagnostics for the file that triggered the
       // validation, set an empty array in order to clear the validation.
