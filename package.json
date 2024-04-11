@@ -388,25 +388,24 @@
             "markdownDescription": "Command line arguments to be passed to ansible-lint.",
             "order": 3
           },
-          "ansible.validation.gatekeeper.enabled": {
+          "ansible.validation.policyCheck.enabled": {
             "scope": "resource",
             "type": "boolean",
             "default": false,
-            "markdownDescription": "Enables Ansible policy check using `ansible-gatekeeper`. Requires `#ansible.validation.enabled#` to be enabled.",
+            "markdownDescription": "Enables Ansible policy rules check. Requires `#ansible.validation.enabled#` to be enabled.",
             "order": 4
           },
-          "ansible.validation.gatekeeper.path": {
+          "ansible.validation.policyEngine.path": {
             "scope": "machine-overridable",
             "type": "string",
-            "default": "ansible-gatekeeper",
-            "markdownDescription": "Path to the ansible-gatekeeper executable.",
+            "markdownDescription": "Path to the Ansible policy rules engine executable.",
             "order": 5
           },
-          "ansible.validation.gatekeeper.arguments": {
+          "ansible.validation.policyEngine.arguments": {
             "scope": "resource",
             "type": "string",
             "default": "",
-            "markdownDescription": "Command line arguments to be passed to ansible-gatekeeper.",
+            "markdownDescription": "Command line arguments to be passed to Ansible policy rules engines.",
             "order": 6
           }
         }
