@@ -50,7 +50,7 @@ __metadata:
     "@types/chai": "npm:^4.3.14"
     "@types/glob": "npm:^8.1.0"
     "@types/ini": "npm:^4.1.0"
-    "@types/lodash": "npm:^4.17.0"
+    "@types/lodash": "npm:^4.17.5"
     "@types/mocha": "npm:^10.0.6"
     "@types/node": "npm:^20.12.7"
     "@types/uuid": "npm:^9.0.8"
@@ -1346,10 +1346,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:*, @types/lodash@npm:^4.17.0":
+"@types/lodash@npm:*":
   version: 4.17.0
   resolution: "@types/lodash@npm:4.17.0"
   checksum: 10/2053203292b5af99352d108656ceb15d39da5922fc3fb8186e1552d65c82d6e545372cc97f36c95873aa7186404d59d9305e9d49254d4ae55e77df1e27ab7b5d
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.17.5":
+  version: 4.17.5
+  resolution: "@types/lodash@npm:4.17.5"
+  checksum: 10/10e2e9cbeb16998026f4071f9f5f2a38b651eba15302f512e0b8ab904c07c197ca0282d2821f64e53c2b692d7046af0a1ce3ead190fb077cbe4036948fce1924
   languageName: node
   linkType: hard
 
@@ -2177,7 +2184,7 @@ __metadata:
     "@types/glob": "npm:^8.1.0"
     "@types/ini": "npm:^4.1.0"
     "@types/jsdom": "npm:^21.1.7"
-    "@types/lodash": "npm:^4.17.0"
+    "@types/lodash": "npm:^4.17.5"
     "@types/minimatch": "npm:^5.1.2"
     "@types/mocha": "npm:^10.0.6"
     "@types/morgan": "npm:^1"
