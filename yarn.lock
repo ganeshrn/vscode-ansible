@@ -1427,17 +1427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:^4.1.24":
-  version: 4.1.24
-  resolution: "@types/selenium-webdriver@npm:4.1.24"
-  dependencies:
-    "@types/node": "npm:*"
-    "@types/ws": "npm:*"
-  checksum: 10/6461b4e9df7ed7b82a86ecb5656a0a5187f962e87c18a2466e0112cb8dc3ed2cf17e9e3b8ed71e6f2be95aa20882e240c5a1cb59dd823961c8b3a7ab2154e4c4
-  languageName: node
-  linkType: hard
-
-"@types/selenium-webdriver@npm:^4.1.25":
+"@types/selenium-webdriver@npm:^4.1.24, @types/selenium-webdriver@npm:^4.1.25":
   version: 4.1.26
   resolution: "@types/selenium-webdriver@npm:4.1.26"
   dependencies:
