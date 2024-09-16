@@ -1428,17 +1428,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/selenium-webdriver@npm:^4.1.24":
-  version: 4.1.24
-  resolution: "@types/selenium-webdriver@npm:4.1.24"
-  dependencies:
-    "@types/node": "npm:*"
-    "@types/ws": "npm:*"
-  checksum: 10/6461b4e9df7ed7b82a86ecb5656a0a5187f962e87c18a2466e0112cb8dc3ed2cf17e9e3b8ed71e6f2be95aa20882e240c5a1cb59dd823961c8b3a7ab2154e4c4
-  languageName: node
-  linkType: hard
-
-"@types/selenium-webdriver@npm:^4.1.26":
+"@types/selenium-webdriver@npm:^4.1.24, @types/selenium-webdriver@npm:^4.1.26":
   version: 4.1.26
   resolution: "@types/selenium-webdriver@npm:4.1.26"
   dependencies:
@@ -8937,19 +8927,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:^4.23.0":
-  version: 4.23.0
-  resolution: "selenium-webdriver@npm:4.23.0"
-  dependencies:
-    "@bazel/runfiles": "npm:^5.8.1"
-    jszip: "npm:^3.10.1"
-    tmp: "npm:^0.2.3"
-    ws: "npm:^8.17.1"
-  checksum: 10/da9d39b290e9579f4b9baa49f823df92a3ad5da20d1b2fc54987ed9b1387833ab5dc5ad78e01f7cb98c2d52299eb156b3b9dfd5e5f76e60f9286c945fa110eb6
-  languageName: node
-  linkType: hard
-
-"selenium-webdriver@npm:^4.24.0":
+"selenium-webdriver@npm:^4.23.0, selenium-webdriver@npm:^4.24.0":
   version: 4.24.0
   resolution: "selenium-webdriver@npm:4.24.0"
   dependencies:
@@ -10880,7 +10858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.17.1, ws@npm:^8.18.0":
+"ws@npm:^8.18.0":
   version: 8.18.0
   resolution: "ws@npm:8.18.0"
   peerDependencies:
