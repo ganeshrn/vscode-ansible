@@ -1043,7 +1043,7 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0",
-    "vscode-extension-tester": "^8.14.1",
+    "vscode-extension-tester": "^8.17.0",
     "warnings-to-errors-webpack-plugin": "^2.3.0",
     "webpack": "^5.100.2",
     "webpack-cli": "^6.0.1",
