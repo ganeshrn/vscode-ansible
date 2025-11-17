@@ -161,4 +161,66 @@ export abstract class BaseLLMProvider implements LLMProvider {
 
     return new Error(`Provider error: ${error.message || "Unknown error"}`);
   }
+
+  /**
+   * Handle HTTP status code errors with comprehensive error messages
+   * This method provides reusable error handling for common HTTP status codes
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected handleHttpError(
+    error: any,
+    operation: string,
+    providerName: string = "",
+  ): Error {
+    const statusCode =
+      error?.status ||
+      // error?.statusCode ||
+      // error?.response?.status ||
+      // error?.response?.statusCode ||
+      // error?.code ||
+      undefined;
+
+    // Handle HTTP status codes
+    switch (statusCode) {
+      case 400:
+        return new Error(
+          `Bad request - invalid or malformed request parameters. Please verify your request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
+        );
+
+      case 403:
+        return new Error(
+          `Forbidden - API key does not have permission to access this resource. Please check your API key permissions. Operation: ${operation}`,
+        );
+
+      case 429:
+        return new Error(
+          `Rate limit exceeded - too many requests or quota exceeded. Please wait and try again later. Operation: ${operation}`,
+        );
+
+      case 500:
+        return new Error(
+          `${providerName} encountered an unexpected error. Please retry the request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
+        );
+
+      case 503:
+        return new Error(
+          `Service unavailable - ${providerName} is temporarily unavailable, possibly due to high load. Please wait and try again later. Operation: ${operation}`,
+        );
+
+      case 504:
+        return new Error(
+          `Gateway timeout - request timed out at the gateway. Please reduce input size or retry the request. Operation: ${operation}`,
+        );
+
+      default:
+        const errorMessage =
+          error?.message ||
+          error?.error?.message ||
+          error?.body?.error?.message ||
+          "Unknown error";
+        return new Error(
+          `${providerName} error: ${errorMessage}. Operation: ${operation}. Status: ${statusCode || "N/A"}`,
+        );
+    }
+  }
 }

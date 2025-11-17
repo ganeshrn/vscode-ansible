@@ -58,51 +58,8 @@ export class GoogleProvider extends BaseLLMProvider {
     console.log(
       `[Google Provider] ${operation} error details: ${JSON.stringify(error, null, 2)}`,
     );
-    const statusCode =
-      error?.status ||
-      undefined;
-    // Handle HTTP status codes
-    switch (statusCode) {
-      case 400:
-        return new Error(
-          `Bad request - invalid or malformed request parameters come from new change. Please verify your request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
-        );
-
-      case 403:
-        return new Error(
-          `Forbidden - API key does not have permission to access this resource. Please check your API key permissions. Operation: ${operation}`,
-        );
-
-      case 429:
-        return new Error(
-          `Rate limit exceeded - too many requests or quota exceeded. Please wait and try again later. Operation: ${operation}`,
-        );
-
-      case 500:
-        return new Error(
-          `Internal server error - Google Gemini API encountered an unexpected error. Please retry the request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
-        );
-
-      case 503:
-        return new Error(
-          `Service unavailable - Google Gemini API is temporarily unavailable, possibly due to high load. Please wait and try again later. Operation: ${operation}`,
-        );
-
-      case 504:
-        return new Error(
-          `Gateway timeout - request timed out at the gateway. Please reduce input size or retry the request. Operation: ${operation}`,
-        );
-
-      default:
-        const errorMessage =
-          error?.message ||
-          error?.error?.message ||
-          error?.body?.error?.message ||
-          "Unknown error";
-        return new Error(
-          `Google Gemini API error: ${errorMessage}. Operation: ${operation}. Status: ${statusCode || "N/A"}`,
-        );
-    }
+    // Use the reusable HTTP error handler from base class
+    return this.handleHttpError(error, operation, "Google Gemini");
   }
 
   async validateConfig(): Promise<boolean> {
