@@ -49,6 +49,61 @@ export class GoogleProvider extends BaseLLMProvider {
 
     this.client = new GoogleGenAI({ apiKey: config.apiKey });
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private handleGeminiError(error: any, operation: string): Error {
+    // Log the full error for debugging
+    this.logger.error(
+      `[Google Provider] ${operation} error details: ${JSON.stringify(error, null, 2)}`,
+    );
+    console.log(
+      `[Google Provider] ${operation} error details: ${JSON.stringify(error, null, 2)}`,
+    );
+    const statusCode =
+      error?.status ||
+      undefined;
+    // Handle HTTP status codes
+    switch (statusCode) {
+      case 400:
+        return new Error(
+          `Bad request - invalid or malformed request parameters come from new change. Please verify your request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
+        );
+
+      case 403:
+        return new Error(
+          `Forbidden - API key does not have permission to access this resource. Please check your API key permissions. Operation: ${operation}`,
+        );
+
+      case 429:
+        return new Error(
+          `Rate limit exceeded - too many requests or quota exceeded. Please wait and try again later. Operation: ${operation}`,
+        );
+
+      case 500:
+        return new Error(
+          `Internal server error - Google Gemini API encountered an unexpected error. Please retry the request. Operation: ${operation}. Details: ${error?.message || "Unknown error"}`,
+        );
+
+      case 503:
+        return new Error(
+          `Service unavailable - Google Gemini API is temporarily unavailable, possibly due to high load. Please wait and try again later. Operation: ${operation}`,
+        );
+
+      case 504:
+        return new Error(
+          `Gateway timeout - request timed out at the gateway. Please reduce input size or retry the request. Operation: ${operation}`,
+        );
+
+      default:
+        const errorMessage =
+          error?.message ||
+          error?.error?.message ||
+          error?.body?.error?.message ||
+          "Unknown error";
+        return new Error(
+          `Google Gemini API error: ${errorMessage}. Operation: ${operation}. Status: ${statusCode || "N/A"}`,
+        );
+    }
+  }
 
   async validateConfig(): Promise<boolean> {
     try {
@@ -216,10 +271,12 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
-      this.logger.error(`[Google Provider] Chat request failed: ${error}`);
-      throw new Error(
-        `Google chat failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      const errorLog=`[Google Provider] Chat request failed: ${error}`;
+      console.error(errorLog);
+      this.logger.error(
+        `[Google Provider] chat failed: ${error instanceof Error ? error.stack : "No stack trace"}`,
       );
+      throw this.handleGeminiError(error, "chat generation");
     }
   }
 
@@ -309,12 +366,12 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
+      const errorLog=`[Google Provider] Playbook generation failed: ${error}`;
+      console.error(errorLog);
       this.logger.error(
-        `[Google Provider] Playbook generation failed: ${error}`,
+        `[Google Provider] Error stack: ${error instanceof Error ? error.stack : "No stack trace"}`,
       );
-      throw new Error(
-        `Google playbook generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      throw this.handleGeminiError(error, "playbook generation");
     }
   }
 
@@ -392,10 +449,12 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
-      this.logger.error(`[Google Provider] Role generation failed: ${error}`);
-      throw new Error(
+      const errorLog=`[Google Provider] Role generation failed: ${error}`;
+      console.error(errorLog);
+      this.logger.error(
         `Google role generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
+      throw this.handleGeminiError(error, "role generation");
     }
   }
 }
