@@ -174,10 +174,6 @@ export abstract class BaseLLMProvider implements LLMProvider {
   ): Error {
     const statusCode =
       error?.status ||
-      // error?.statusCode ||
-      // error?.response?.status ||
-      // error?.response?.statusCode ||
-      // error?.code ||
       undefined;
 
     // Handle HTTP status codes
@@ -189,12 +185,12 @@ export abstract class BaseLLMProvider implements LLMProvider {
 
       case 403:
         return new Error(
-          `Forbidden - API key does not have permission to access this resource. Please check your API key permissions. Operation: ${operation}`,
+          `Forbidden - ${providerName} API key does not have permission to access this resource. Please check your API key permissions. Operation: ${operation} and status code: ${statusCode}`,
         );
 
       case 429:
         return new Error(
-          `Rate limit exceeded - too many requests or quota exceeded. Please wait and try again later. Operation: ${operation}`,
+          `Rate limit exceeded - too many requests or quota exceeded. Please wait and try again later. Operation: ${operation} and status code: ${statusCode}`,
         );
 
       case 500:
@@ -204,19 +200,17 @@ export abstract class BaseLLMProvider implements LLMProvider {
 
       case 503:
         return new Error(
-          `Service unavailable - ${providerName} is temporarily unavailable, possibly due to high load. Please wait and try again later. Operation: ${operation}`,
+          `Service unavailable - ${providerName} is temporarily unavailable, possibly due to high load. Please wait and try again later. Operation: ${operation} and status code: ${statusCode}`,
         );
 
       case 504:
         return new Error(
-          `Gateway timeout - request timed out at the gateway. Please reduce input size or retry the request. Operation: ${operation}`,
+          `Gateway timeout - request timed out at the gateway. Please reduce input size or retry the request. Operation: ${operation} and status code: ${statusCode}`,
         );
 
       default:
         const errorMessage =
           error?.message ||
-          error?.error?.message ||
-          error?.body?.error?.message ||
           "Unknown error";
         return new Error(
           `${providerName} error: ${errorMessage}. Operation: ${operation}. Status: ${statusCode || "N/A"}`,

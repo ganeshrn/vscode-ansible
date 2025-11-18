@@ -228,11 +228,7 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
-      const errorLog=`[Google Provider] Chat request failed: ${error}`;
-      console.error(errorLog);
-      this.logger.error(
-        `[Google Provider] chat failed: ${error instanceof Error ? error.stack : "No stack trace"}`,
-      );
+      this.logger.error(`[Google Provider] Chat request failed: ${error}`);
       throw this.handleGeminiError(error, "chat generation");
     }
   }
@@ -323,11 +319,7 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
-      const errorLog=`[Google Provider] Playbook generation failed: ${error}`;
-      console.error(errorLog);
-      this.logger.error(
-        `[Google Provider] Error stack: ${error instanceof Error ? error.stack : "No stack trace"}`,
-      );
+      this.logger.error(`[Google Provider] Playbook generation failed: ${error}`);
       throw this.handleGeminiError(error, "playbook generation");
     }
   }
@@ -406,11 +398,7 @@ export class GoogleProvider extends BaseLLMProvider {
         model: this.modelName,
       };
     } catch (error) {
-      const errorLog=`[Google Provider] Role generation failed: ${error}`;
-      console.error(errorLog);
-      this.logger.error(
-        `Google role generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      this.logger.error(`[Google Provider] Role generation failed: ${error}`);
       throw this.handleGeminiError(error, "role generation");
     }
   }
