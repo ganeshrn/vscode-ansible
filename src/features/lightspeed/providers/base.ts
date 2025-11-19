@@ -141,28 +141,6 @@ export abstract class BaseLLMProvider implements LLMProvider {
   }
 
   /**
-   * Handle provider-specific errors
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected handleError(error: any): Error {
-    if (error.name === "AbortError") {
-      return new Error(
-        "Request timeout - please check your connection and try again",
-      );
-    }
-
-    if (error.status === 401) {
-      return new Error("Authentication failed - please check your API key");
-    }
-
-    if (error.status === 429) {
-      return new Error("Rate limit exceeded - please wait and try again");
-    }
-
-    return new Error(`Provider error: ${error.message || "Unknown error"}`);
-  }
-
-  /**
    * Handle HTTP status code errors with comprehensive error messages
    * This method provides reusable error handling for common HTTP status codes
    */
